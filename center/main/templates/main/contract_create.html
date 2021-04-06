@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Создание договора
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        
+        <form action="{% url 'create_contract_url' %}" method="post">
+            {% csrf_token %}
+            <div class="title">
+                <h2>Оформление договора</h2>
+            </div>
+            
+            <div class="title">
+                <h2>Укажите данные покупателя</h2>
+            </div>
+            <div class="kl_pseria">
+                <p class='form_p'>Серия паспорта:</p>
+                {{ contract.b_pseria }}
+            </div>
+            {% if contract.b_pseria.errors %}
+                <div class="errors">
+                     {{ contract.b_pseria.errors }}
+                </div>
+            {% endif %}
+            <div class="kl_pnomer">
+                <p class='form_p'>Номер паспорта:</p>
+                {{ contract.b_pnomer }}
+            </div>
+            {% if contract.b_pnomer.errors %}
+                <div class="errors">
+                     {{ contract.b_pnomer.errors }}
+                </div>
+            {% endif %}
+            
+            <div class="title">
+                <h2>Укажите данные продавца</h2>
+            </div>
+            <div class="kl_pseria">
+                <p class='form_p'>Серия паспорта:</p>
+                {{ contract.s_pseria }}
+            </div>
+            {% if contract.s_pseria.errors %}
+                <div class="errors">
+                     {{ contract.s_pseria.errors }}
+                </div>
+            {% endif %}
+            <div class="kl_pnomer">
+                <p class='form_p'>Номер паспорта:</p>
+                {{ contract.s_pnomer }}
+            </div>
+            {% if contract.s_pnomer.errors %}
+                <div class="errors">
+                     {{ contract.s_pnomer.errors }}
+                </div>
+            {% endif %}
+            
+            <div class="title">
+                <h2>Укажите адрес квартиры</h2>
+            </div>
+            <div class="f_adress">
+                <p class='form_p'>Адрес:</p>
+                {{ contract.adress }}
+            </div>
+            {% if contract.adress.errors %}
+                <div class="errors">
+                    {{ contract.adress.errors }}
+                </div>
+            {% endif %}
+            
+        <div class="title">
+            <h2>Укажите условаия</h2>
+        </div>
+        <div class="f_adress">
+            <p class='form_p'>Срок сдачи:</p>
+            {{ contract.time_to_sale }}
+        </div>
+        {% if contract.time_to_sale.errors %}
+                <div class="errors">
+                     {{ contract.time_to_sale.errors }}
+                </div>
+            {% endif %}
+        <div class="f_adress">
+            <p class='form_p'>Цена(в рублях):</p>
+            {{ contract.coast }}
+        </div>
+        {% if contract.coast.errors %}
+            <div class="errors">
+                {{ contract.coast.errors }}
+            </div>
+        {% endif %}
+        <div class="f_adress">
+            <p class='form_p'>Процент компании:</p>
+            {{ contract.proc_for_comp }}
+        </div>
+        {% if contract.proc_for_comp.errors %}
+            <div class="errors">
+                {{ contract.proc_for_comp.errors }}
+            </div>
+        {% endif %}
+        <!-- <div class="f_adress">
+            <p class='form_p'>Дата создания:</p>
+            {{ contract.time_create }}
+        </div> -->
+        
+        
+        <div class="btn_block">
+            <button type="submit">Создать</button>
+        </div>
+        
+    </form>
+</div>
+{% endblock %}

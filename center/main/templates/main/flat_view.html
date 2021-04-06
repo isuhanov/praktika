@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load main_get_filter %}
+{% load static %}
+
+
+{% block title %}
+    Квартиры
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+
+        <div class="fl_block">
+            {% for fl in flat %}
+                {% if fl.status == 'активен' %}
+                <div class="white fl_card">
+                {% elif fl.status == 'продана' %}
+                <div class="red fl_card">
+                {% endif %}
+                    <div class="fl_header">
+                        <img src="{% static 'icon/buildings.png' %}" alt="">
+                    </div>
+                    <div class="fl_adress">
+                        <p class="fl_title">Адрес:</p>
+                        <p>{{ fl.adress|truncatechars:45 }}</p>
+                    </div>
+                    <div class="fl_coast row_block">
+                        <p>Цена:</p>
+                        <p>{{ fl.coast|truncatechars:10 }}</p>
+                    </div>
+                    <div class="fl_descr">
+                        <p class="fl_title">Описание:</p>
+                        <p><textarea name="" id="" cols="30" rows="10" class="descr" readonly>{{ fl.descr|truncatechars:100 }}</textarea></p>
+                    </div>
+                    <div class="fl_rooms row_block">
+                        <p>Кол-во комнат:</p>
+                        <p>{{ fl.rooms|truncatechars:30 }}</p>
+                    </div>
+                    <div class="fl_seria row_block">
+                        <p>Серия паспорта продавца:</p>
+                        <p>{{ flat|get_pseria_sel:fl.id_fl|truncatechars:4 }}</p>
+                    </div>
+                    <div class="fl_nomer row_block">
+                        <p>Номер паспорта продавца:</p>
+                        <p>{{ flat|get_pnomer_sel:fl.id_fl|truncatechars:6 }}</p>
+                    </div>
+                    <div class="fl_nomer row_block">
+                        <p>Статус:</p>
+                        <p>{{ fl.status }}</p>
+                    </div>
+                </div> 
+            {% endfor %}
+        </div>
+
+    </div>
+{% endblock %}

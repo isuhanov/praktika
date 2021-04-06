@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load main_get_filter %}
+
+
+{% block title %}
+    Контракты
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+
+
+        <div class="contr_title_block">
+            Договоры
+        </div>
+        <div class="contr_block">
+            {% for c in contract %}
+
+            
+                <div class="contr_card">
+                    <div class="contr_id">
+                        <p class="c_title">
+                            ID:
+                        </p>
+                        <p class="c_cont">
+                            {{ c.id_contract }}
+                        </p>
+                    </div>
+                    <div class="contr_tcr">
+                        <div class="">
+                            Дата создания:
+                        </div>
+                        <div class="c_cont">
+                            {{ c.time_create }}
+                        </div>
+                    </div>
+                    <div class="contr_tsale">
+                        <div class="">
+                            Срок сдачи:
+                        </div>
+                        <div class="c_cont">
+                            {{ c.time_to_sale }}
+                        </div>
+                    </div>
+                    <div class="contr_coast">
+                        <div class="">
+                            Цена:
+                        </div>
+                        <div class="c_cont">
+                            {{ c.coast }}
+                        </div>
+                    </div>
+                    <div class="contr_proc">
+                        <div class="">
+                            Процент компании:
+                        </div>
+                        <div class="c_cont">
+                            {{ c.proc_for_comp }}
+                        </div>
+                    </div>
+                    <div class="contr_buyer">
+                        <div class="">
+                            Паспортные данные покупателя:
+                        </div>
+                        <div class="c_cont">
+                            {{ contract|get_buyer_pseria:c.id_contract }} {{ contract|get_buyer_pnomer:c.id_contract }}
+                        </div>
+                    </div>
+                    <div class="contr_seller">
+                        <div class="">
+                            Паспортные данные продавца:
+                        </div>
+                        <div class="c_cont">
+                            {{ contract|get_seller_pseria:c.id_contract }} {{ contract|get_seller_pnomer:c.id_contract }}
+                        </div>
+                    </div>
+                    <div class="contr_adress">
+                        <div class="">
+                            Адрес квартиры:
+                        </div>
+                        <div class="c_cont">
+                            {{ flat|get_adress:c.id_contract }}
+                        </div>
+                    </div>
+
+                </div>
+
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

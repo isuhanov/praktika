@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Дрбавление покупателя
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        
+        <form class="" action="{% url 'add_flat_url' %}" method="post">
+            {% csrf_token %}
+            
+            <div class="title">
+                <h2>Укажите данные продавца</h2>
+            </div>
+            <div class="kl_pseria">
+                <p class='form_p'>Серия паспорта:</p>
+                {{ flat.pasp_seria }}
+            </div>
+            {% if flat.pasp_seria.errors %}
+                <div class="errors">
+                    {{ flat.pasp_seria.errors }}
+                </div>
+            {% endif %}
+            <div class="kl_pnomer">
+                <p class='form_p'>Номер паспорта:</p>
+                {{ flat.pasp_nomer }}
+            </div>
+            {% if flat.pasp_nomer.errors %}
+                <div class="errors">
+                    {{ flat.pasp_nomer.errors }}
+                </div>
+            {% endif %}
+            
+            
+            <div class="title">
+                <h2>Добавление квартиры клиента</h2>
+            </div>
+            
+            <div class="kl_mail">
+                <p class='form_p'>Цена(в рублях):</p>
+                {{ flat.coast }}
+            </div>
+            {% if flat.coast.errors %}
+                <div class="errors">
+                    {{ flat.coast.errors }}
+                </div>
+            {% endif %}
+            <div class="kl_mail">
+                <p class='form_p'>Краткое описание:</p>
+                {{ flat.descr }}
+            </div>
+            {% if flat.descr.errors %}
+                <div class="errors">
+                    {{ flat.descr.errors }}
+                </div>
+            {% endif %}
+            <div class="kl_mail">
+                <p class='form_p'>Кол-во комнат:</p>
+                {{ flat.rooms }}
+            </div>
+            {% if flat.rooms.errors %}
+                <div class="errors">
+                    {{ flat.rooms.errors }}
+                </div>
+            {% endif %}
+            <div class="kl_mail">
+                <p class='form_p'>Адрес:</p>
+                {{ flat.adress }}
+            </div>
+            {% if flat.adress.errors %}
+                <div class="errors">
+                    {{ flat.adress.errors }}
+                </div>
+            {% endif %}
+            <div class="kl_mail">
+                <p class='form_p'>Площадь(кв.м.):</p>
+            {{ flat.square_f }}
+            </div>
+        {% if flat.square_f.errors %}
+                <div class="errors">
+                    {{ flat.square_f.errors }}
+                </div>
+            {% endif %}
+        
+        <div class="btn_block">
+            <button type="submit">Добавить</button>
+        </div>
+        
+    </form>
+</div>
+{% endblock %}

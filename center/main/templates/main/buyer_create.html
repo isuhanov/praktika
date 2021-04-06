@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Дрбавление покупателя
+{% endblock %}
+
+
+{% block content %}
+
+  <div class="container">
+
+    <form class="" action="{% url 'create_buyer_url' %}" method="post">
+      {% csrf_token %}
+      
+      <div class="title">
+        <h2>Создание клиента(покупателя)</h2>
+      </div>
+      
+      <div class="kl_fio">
+        <p class='form_p'>ФИО:</p>
+        {{ buyer.fio }}
+      </div>
+      {% if buyer.fio.errors %}
+          <div class="errors">
+            {{ buyer.fio.errors }}
+          </div>
+      {% endif %}
+      <div class="kl_bd">
+        <p class='form_p'>День рождения:</p>
+        {{ buyer.bd }}
+      </div>
+      {% if buyer.bd.errors %}
+          <div class="errors">
+            {{ buyer.bd.errors }}
+          </div>
+      {% endif %}
+      <div class="kl_phone">
+        <p class='form_p'>Телефон:</p>
+        {{ buyer.phone }}
+      </div>
+      {% if buyer.phone.errors %}
+          <div class="errors">
+            {{ buyer.phone.errors }}
+          </div>
+      {% endif %}
+      <div class="kl_mail">
+        <p class='form_p'>Почта:</p>
+        {{ buyer.mail }}
+      </div>
+      {% if buyer.mail.errors %}
+          <div class="errors">
+            {{ buyer.mail.errors }}
+          </div>
+      {% endif %}
+      <div class="kl_pseria">
+        <p class='form_p'>Серия паспорта:</p>
+        {{ buyer.pasp_seria }}
+      </div>
+      {% if buyer.pasp_seria.errors %}
+          <div class="errors">
+            {{ buyer.pasp_seria.errors }}
+          </div>
+      {% endif %}
+      <div class="kl_pnomer">
+        <p class='form_p'>Номер паспорта:</p>
+        {{ buyer.pasp_nomer }}
+      </div>
+      {% if buyer.pasp_nomer.errors %}
+          <div class="errors">
+            {{ buyer.pasp_nomer.errors }}
+          </div>
+      {% endif %}
+      
+      
+      
+      <div class="title">
+        <h2>Укажите требования к новой квартире</h2>
+      </div>
+      
+      <div class="kl_pnomer">
+        <p class='form_p'>Кол-во комнат:</p>
+          {{ buyer.wish_room }}
+        </div>
+        {% if buyer.wish_room.errors %}
+          <div class="errors">
+            {{ buyer.wish_room.errors }}
+          </div>
+      {% endif %}
+        <div class="kl_pnomer">
+          <p class='form_p'>Примерный адрес(район):</p>
+          {{ buyer.wish_adress }}
+        </div>
+        {% if buyer.wish_adress.errors %}
+          <div class="errors">
+            {{ buyer.wish_adress.errors }}
+          </div>
+        {% endif %}
+        <div class="kl_pnomer">
+          <p class='form_p'>Площадь(кв.м.):</p>
+          {{ buyer.wish_square }}
+        </div>
+        {% if buyer.wish_square.errors %}
+          <div class="errors">
+            {{ buyer.wish_square.errors }}
+          </div>
+        {% endif %}
+        <div class="kl_pnomer">
+          <p class='form_p'>Бюджет:</p>
+          {{ buyer.budget }}
+        </div>
+        {% if buyer.budget.errors %}
+          <div class="errors">
+            {{ buyer.budget.errors }}
+          </div>
+        {% endif %}
+        
+        <div class="btn_block">
+          <button type="submit">Создать</button>
+        </div>
+      </form>
+      
+    </div>
+{% endblock %}

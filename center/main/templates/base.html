@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+    <title>
+        {% block title %}
+        {% endblock %}
+    </title>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{% static 'icon/logo.jpg' %}" alt="">
+        </div>
+        <nav>
+            <ul>
+                <li class="main_url"><a href="{% url 'index_url' %}">Главная</a></li>
+                <div class="sel_block rel_block">
+                    <li class="btn_url" id="0">Продавцы</li>
+                    <div class="url_block" id="0">
+                        <a href="{% url 'create_seller_url' %}">Добавить продавца</a>
+                        <a href="{% url 'view_seller_url' %}">Продавцы</a>
+                    </div>
+                </div>
+                <div class="buyer_block rel_block">
+                    <li class="btn_url" id="1">Покупатели</li>
+                    <div class="url_block" id="1">
+                        <a href="{% url 'create_buyer_url' %}">Добавить покупателя</a>
+                        <a href="{% url 'view_buyer_url' %}">Покупатели</a>
+                    </div>
+                </div>
+                <div class="flat_block rel_block">
+                    <li class="btn_url" id="2">Квартиры</li>
+                    <div class="url_block" id="2">
+                        <a href="{% url 'add_flat_url' %}">Добавить квартиру</a>
+                        <a href="{% url 'view_flat_url' %}">Квартиры</a>
+                    </div>
+                </div>
+                <div class="contract_block rel_block">
+                    <li class="btn_url" id="3">Договоры</li>
+                    <div class="url_block" id="3">
+                        <a href="{% url 'create_contract_url' %}">Составить договор</a>
+                        <a href="{% url 'view_contract_url' %}">Договоры</a>
+                    </div>
+                </div>
+            </ul>
+        </nav>
+    </header>
+    {% block content %}
+    {% endblock %}
+
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

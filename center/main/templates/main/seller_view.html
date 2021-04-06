@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load main_get_filter %}
+
+
+{% block title %}
+    Продавцы
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <div class="kl_wrapp">
+
+        <div class="activ_block">
+
+        <div class="contr_title_block">
+            Активные клиенты
+        </div>
+        <div class="kl_block">
+            {% for seller in seller %}
+                {% for klient in klient %}
+                    {% if klient.id_kl == seller|get_item:'id_kl' and sel_list_act|get_status:klient.id_kl == 'активен' %}
+                        <div class="kl_card">
+                            <div class="kl_card_fio">
+                                <p>ФИО:</p>
+                                <p>
+                                    {{ klient.fio|truncatechars:30 }}
+                                </p>
+                            </div>
+                            <div class="kl_bd">
+                                <p>День рождения:</p>
+                                <p>
+                                    {{ klient.bd }}
+                                </p>
+                            </div>
+                            <div class="kl_phone">
+                                <p>Телефон:</p>
+                                <p>
+                                    {{ klient.phone|truncatechars:11 }}
+                                </p> 
+                            </div>
+                            <div class="kl_mail">
+                                <p>Почта:</p>
+                                <p>
+                                    {{ klient.mail|truncatechars:30 }}
+                                </p>
+                            </div>
+                            <div class="kl_pasp_seria">
+                                <p>Серия паспорта:</p>
+                                <p>
+                                    {{ klient.pasp_seria|truncatechars:4 }}
+                                </p>  
+                            </div>
+                            <div class="kl_pasp_nomer">
+                                <p>Номер паспорта:</p>
+                                <p>
+                                    {{ klient.pasp_nomer|truncatechars:6 }}
+                                </p>
+                            </div>
+                            <div class="kl_status">
+                                <p>Статус:</p>
+                                <p>
+                                    {{ sel_list_act|get_status:klient.id_kl }}
+                                </p>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </div>
+
+    </div>
+
+        <div class="disactiv_block">
+
+        <div class="contr_title_block">
+            Неактивные клиенты
+        </div>
+        <div class="kl_block">
+            {% for seller in seller %}
+                {% for klient in klient %}
+                    {% if klient.id_kl == seller|get_item:'id_kl' and sel_list_disact|get_status:klient.id_kl == 'неактивен' %}
+                        <div class="kl_card">
+                            <div class="kl_card_fio red">
+                                <p>ФИО:</p>
+                                <p>
+                                    {{ klient.fio }}
+                                </p>
+                            </div>
+                            <div class="kl_bd">
+                                <p>День рождения:</p>
+                                <p>
+                                    {{ klient.bd }}
+                                </p>
+                            </div>
+                            <div class="kl_phone">
+                                <p>Телефон:</p>
+                                <p>
+                                    {{ klient.phone }}
+                                </p> 
+                            </div>
+                            <div class="kl_mail">
+                                <p>Почта:</p>
+                                <p>
+                                    {{ klient.mail }}
+                                </p>
+                            </div>
+                            <div class="kl_pasp_seria">
+                                <p>Серия паспорта:</p>
+                                <p>
+                                    {{ klient.pasp_seria }}
+                                </p>  
+                            </div>
+                            <div class="kl_pasp_nomer">
+                                <p>Номер паспорта:</p>
+                                <p>
+                                    {{ klient.pasp_nomer }}
+                                </p>
+                            </div>
+                            <div class="kl_status">
+                                <p>Статус:</p>
+                                <p>
+                                    {{ sel_list_disact|get_status:klient.id_kl }}
+                                </p>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+
+

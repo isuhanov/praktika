@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Дрбавление продавца
+{% endblock %}
+
+
+{% block content %}
+
+  <div class="container">
+
+    <div class="create_block">
+
+      <form class="" action="{% url 'create_seller_url' %}" method="post">
+        {% csrf_token %}
+        
+        
+        <!-- {% if seller.errors %}
+        {{ seller.errors }}
+        {% endif %} -->
+        
+        <div class="title">
+          <h2>Создание клиента(продавца)</h2>
+        </div>
+        
+        <div class="kl_fio form_block">
+          <p class='form_p'>ФИО:</p>
+          <p>
+            
+            {{ seller.fio }}
+          </p>
+        </div>
+          {% if seller.fio.errors %}
+          <div class="errors">
+            {{ seller.fio.errors }}
+          </div>
+          {% endif %}
+
+        <div class="kl_bd ">
+          <p class='form_p'>День рождения:</p>
+          {{ seller.bd }}
+        </div>
+        {% if seller.bd.errors %}
+          <div class="errors">
+            {{ seller.bd.errors }}
+          </div>
+        {% endif %}
+
+        <div class="kl_phone">
+          <p class='form_p'>Телефон:</p>
+          {{ seller.phone }}
+        </div>
+        {% if seller.phone.errors %}
+          <div class="errors">
+            {{ seller.phone.errors }}
+          </div>
+        {% endif %}
+
+        <div class="kl_mail">
+          <p class='form_p'>Почта:</p>
+          {{ seller.mail }}
+        </div>
+        {% if seller.mail.errors %}
+          <div class="errors">
+            {{ seller.mail.errors }}
+          </div>
+        {% endif %}
+
+        <div class="kl_pseria">
+          <p class='form_p'>Серия паспорта:</p>
+          {{ seller.pasp_seria }}
+        </div>
+        {% if seller.pasp_seria.errors %}
+          <div class="errors">
+            {{ seller.pasp_seria.errors }}
+          </div>
+        {% endif %}
+
+        <div class="kl_pnomer">
+          <p class='form_p'>Номер паспорта:</p>
+          {{ seller.pasp_nomer }}
+        </div>
+        {% if seller.pasp_nomer.errors %}
+          <div class="errors">
+            {{ seller.pasp_nomer.errors }}
+          </div>
+        {% endif %}
+        
+        
+        
+        <div class="title">
+          <h2>Добавление квартиры клиента</h2>
+        </div>
+        
+        <div class="kl_mail">
+          <p class='form_p'>Цена(в рублях):</p>
+          {{ seller.coast }}
+        </div>
+        {% if seller.coast.errors %}
+          <div class="errors">
+            {{ seller.coast.errors }}
+          </div>
+        {% endif %}
+
+        <div class="kl_mail">
+          <p class='form_p'>Краткое описание:</p>
+          {{ seller.descr }}
+        </div>
+        {% if seller.descr.errors %}
+          <div class="errors">
+            {{ seller.descr.errors }}
+          </div>
+        {% endif %}
+
+        <div class="kl_mail">
+          <p class='form_p'>Кол-во комнат:</p>
+          {{ seller.rooms }}
+        </div>
+        {% if seller.rooms.errors %}
+          <div class="errors">
+            {{ seller.rooms.errors }}
+          </div>
+        {% endif %}
+
+        <div class="kl_mail">
+          <p class='form_p'>Адрес:</p>
+          {{ seller.adress }}
+        </div>
+        {% if seller.adress.errors %}
+          <div class="errors">
+            {{ seller.adress.errors }}
+          </div>
+        {% endif %}
+
+        <div class="kl_mail">
+          <p class='form_p'>Площадь(кв.м.):</p>
+          {{ seller.square_f }}
+        </div>
+        {% if seller.square_f.errors %}
+          <div class="errors">
+            {{ seller.square_f.errors }}
+          </div>
+        {% endif %}
+        
+        
+        <div class="btn_block">
+          <button type="submit">Создать</button>
+        </div>
+        
+      </div>
+    </form>
+      
+      
+    </div>
+{% endblock %}
