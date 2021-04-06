@@ -70,6 +70,8 @@ def check_coast(coast):
             raise ValidationError('Некоректные символы в цене')
     if len(coast) > 20:
         raise ValidationError('Слишком большая цена')
+    if float(coast) == 0:
+        raise ValidationError('Не может быть равным 0')
 
 def check_rooms(rooms):
     rooms = str(rooms)
@@ -94,8 +96,8 @@ def chech_square(square):
 
 def check_exist_kl(pseria, pnomer, model):
     try:
-        kl = Klient.objects.get(pasp_seria=pseria, pasp_nomer=pnomer)
-        obj = model.objects.get(id_kl = kl)
+        kl = Klient.objects.get(pasp_seria=pseria, pasp_nomer=pnomer)#SELECT * FORM Klient WHERE pasp_seria={pseria}, pasp_nomer={pnomer}
+        obj = model.objects.get(id_kl = kl)#SELECT * FORM {model} WHERE id_kl = {kl}
         raise ValidationError('Такой клиент существует')
         return 'клиент существует'
     except ObjectDoesNotExist:
@@ -103,8 +105,8 @@ def check_exist_kl(pseria, pnomer, model):
 
 def check_doesnotexist_kl(pseria, pnomer, model):
     try:
-        kl = Klient.objects.get(pasp_seria=pseria, pasp_nomer=pnomer)
-        sel_status = model.objects.get(id_kl=kl).status
+        kl = Klient.objects.get(pasp_seria=pseria, pasp_nomer=pnomer)#SELECT * FORM Klient WHERE pasp_seria={pseria}, pasp_nomer={pnomer}
+        sel_status = model.objects.get(id_kl=kl).status#SELECT status FORM {model} WHERE id_kl = {kl}
         if sel_status == 'неактивен':
             return 'клиент неактивен'
         elif sel_status == 'активен':
@@ -115,7 +117,7 @@ def check_doesnotexist_kl(pseria, pnomer, model):
 
 def check_exist_fl(new_adress):
     try:
-        fl = Flat.objects.get(adress=new_adress)
+        fl = Flat.objects.get(adress=new_adress)#SELECT * FORM Flat WHERE adress = {new_adress}
         if fl.status == 'активен':
             raise ValidationError('Такая квартира уже существует')
             return 'активен'
@@ -126,7 +128,7 @@ def check_exist_fl(new_adress):
 
 def checheck_doesnotexist_fl(new_adress):
     try:
-        fl = Flat.objects.get(adress=new_adress)
+        fl = Flat.objects.get(adress=new_adress)#SELECT * FORM Flat WHERE adress = {new_adress}
         if fl.status == 'активен':
             return 'активен'
         elif fl.status == 'продана':
@@ -140,18 +142,18 @@ def checheck_doesnotexist_fl(new_adress):
 
 def create_kl(text, n_fio,n_bd, n_phone, n_mail, n_pseria, n_pnomer):
     if text == 'клиент не существует':
-        new_kl = Klient.objects.create(
-            fio = n_fio,
-            bd = n_bd,
-            phone = n_phone,
-            mail = n_mail,
-            pasp_seria = n_pseria,
-            pasp_nomer = n_pnomer
-        )
+        new_kl = Klient.objects.create( #INSERT INTO Klient (fio, bd, phone, mail, pasp_seria, pasp_nomer) VALUES (
+            fio = n_fio,                #   {n_fio},
+            bd = n_bd,                  #   {n_bd},
+            phone = n_phone,            #   {n_phone},
+            mail = n_mail,              #   {n_mail},
+            pasp_seria = n_pseria,      #   {n_pseria},
+            pasp_nomer = n_pnomer       #   {n_pnomer},
+        )                               #    );
         return new_kl
 
 def create_flat(n_coast, n_descr, n_rooms, n_adress, n_squae, n_id_seller):
-    new_flat = Flat.objects.create(                        #INSERT INTO Seller (coast, descr, rooms, adress, square_f, id_seller) VALUES (
+    new_flat = Flat.objects.create(                        #INSERT INTO Seller (coast, descr, rooms, adress, square_f, id_seller, status) VALUES (
         coast = n_coast,                                   #    {self.cleaned_data['coast']},
         descr = n_descr,                                   #    {self.cleaned_data['descr']},
         rooms = n_rooms,                                   #    {self.cleaned_data['rooms']},
@@ -163,8 +165,8 @@ def create_flat(n_coast, n_descr, n_rooms, n_adress, n_squae, n_id_seller):
     return new_flat
 
 def change_status_flat(new_adress, n_coast, n_descr, n_rooms, n_squae, n_id_seller):
-    fl = Flat.objects.get(adress = new_adress)
-    fl.coast = n_coast
+    fl = Flat.objects.get(adress = new_adress)          #UPDATE Flat SET coast = n_coast, descr = n_descr, rooms = n_rooms, square_f = n_squae, id_seller = (SELECT * FORM Seller WHERE id_kl = {n_id_seller}), status = 'активен'
+    fl.coast = n_coast                                  #WHERE adress = {new_adress}
     fl.descr = n_descr
     fl.rooms = n_rooms
     fl.square_f = n_squae
@@ -260,32 +262,18 @@ class SellerForm(forms.Form):
         create_kl(self.exist_klient_text, self.cleaned_data['fio'], self.cleaned_data['bd'], self.cleaned_data['phone'], self.cleaned_data['mail'], self.cleaned_data['pasp_seria'], self.cleaned_data['pasp_nomer'])
 
     def save_sel(self):#сохраняю продавца в бд
-        self.id_kl_sel = Klient.objects.get(pasp_seria = self.cleaned_data['pasp_seria'], pasp_nomer = self.cleaned_data['pasp_nomer'])#SELECT id_kl FROM Klient WHERE pasp_seria = {self.cleaned_data['pasp_seria']} AND pasp_nomer = {self.cleaned_data['pasp_nomer']}
-        new_seller = Seller.objects.create(          #INSERT INTO Seller (id_kl) VALUES (
+        self.id_kl_sel = Klient.objects.get(pasp_seria = self.cleaned_data['pasp_seria'], pasp_nomer = self.cleaned_data['pasp_nomer'])#SELECT * FROM Klient WHERE pasp_seria = {self.cleaned_data['pasp_seria']} AND pasp_nomer = {self.cleaned_data['pasp_nomer']}
+        new_seller = Seller.objects.create(          #INSERT INTO Seller (id_kl, status) VALUES (
             id_kl = self.id_kl_sel,                  #    {self.id_kl_sel},
             status = 'активен'                       #    'активен'
         )                                            #    );
         return new_seller
 
     def save_fl(self):#сохраняю квартиру в бд
+        id_sel = Seller.objects.get(id_kl=self.id_kl_sel)#SELECT * FROM Seller WHERE id_kl = {self.id_kl_sel}
         if self.text_flat_exist == 'не существует':
-            id_sel = Seller.objects.get(id_kl=self.id_kl_sel)#SELECT id_seller FROM Seller WHERE id_kl = {self.id_kl_sel}
-            # new_flat = Flat.objects.create(                        #INSERT INTO Seller (coast, descr, rooms, adress, square_f, id_seller) VALUES (
-            #     coast = self.cleaned_data['coast'],                #    {self.cleaned_data['coast']},
-            #     descr = self.cleaned_data['descr'],                #    {self.cleaned_data['descr']},
-            #     rooms = self.cleaned_data['rooms'],                 #    {self.cleaned_data['rooms']},
-            #     adress = self.cleaned_data['adress'],              #    {self.cleaned_data['adress']},
-            #     square_f = self.cleaned_data['square_f'],          #    {self.cleaned_data['square_f']},
-            #     id_seller = id_sel,                                #    {id_sel},
-            #     status = 'активен'                                 #    'активен'
-            # )                                                      #    );
-            # return new_flat
             create_flat(self.cleaned_data['coast'], self.cleaned_data['descr'], self.cleaned_data['rooms'], self.cleaned_data['adress'], self.cleaned_data['square_f'], id_sel)
         elif self.text_flat_exist == 'продана':
-            # fl = Flat.objects.get(adress = self.cleaned_data['adress'])
-            # fl.status = 'активен'
-            # fl.id_seller = Seller.objects.get(id_kl=self.id_kl_sel)
-            # fl.save()
             change_status_flat(self.cleaned_data['adress'], self.cleaned_data['coast'], elf.cleaned_data['descr'], self.cleaned_data['rooms'], self.cleaned_data['square_f'], id_sel)
 
 
@@ -345,9 +333,9 @@ class BuyerForm(forms.Form):
         check_pnomer(new_pnomer)
         self.exist_klient_text = check_exist_kl(self.cleaned_data['pasp_seria'], new_pnomer, Buyer)#проверка на существование клиента
         try:
-            kl = Klient.objects.get(pasp_seria= self.cleaned_data['pasp_seria'], pasp_nomer=new_pnomer)
+            kl = Klient.objects.get(pasp_seria= self.cleaned_data['pasp_seria'], pasp_nomer=new_pnomer)#SELECT * FROM Klient WHERE pasp_seria= {self.cleaned_data['pasp_seria']}, pasp_nomer={new_pnomer}
             try:
-                self.buyer = Buyer.objects.get(id_kl=kl)
+                self.buyer = Buyer.objects.get(id_kl=kl)#SELECT * FROM Buyer WHERE id_kl={kl}
                 if self.buyer.status == 'неактивен':
                     self.text = 'существует неактивен'
                 elif self.buyer.status == 'активен':
@@ -384,20 +372,20 @@ class BuyerForm(forms.Form):
             create_kl(self.text, self.cleaned_data['fio'], self.cleaned_data['bd'], self.cleaned_data['phone'], self.cleaned_data['mail'], self.cleaned_data['pasp_seria'], self.cleaned_data['pasp_nomer'])
 
     def save_b(self):#сохраняю поупателя в бд
-        kl = Klient.objects.get(pasp_seria=self.cleaned_data['pasp_seria'], pasp_nomer= self.cleaned_data['pasp_nomer'])
+        kl = Klient.objects.get(pasp_seria=self.cleaned_data['pasp_seria'], pasp_nomer= self.cleaned_data['pasp_nomer'])#SELECT * FROM Klient WHERE pasp_seria={self.cleaned_data['pasp_seria']}, pasp_nomer= {self.cleaned_data['pasp_nomer']}
         if self.text == 'клиент не существует' or self.text == 'нет такого покупателя':
-            new_buyer = Buyer.objects.create(                       #INSERT INTO Buyer (id_kl, wish_room, wish_adress, wish_square, budget) VALUES (
-                id_kl = kl,                                    #   {id_kl_b},
+            new_buyer = Buyer.objects.create(                       #INSERT INTO Buyer (id_kl, wish_room, wish_adress, wish_square, budget, status) VALUES (
+                id_kl = kl,                                         #   {id_kl_b},
                 wish_room = self.cleaned_data['wish_room'],         #   {self.cleaned_data['wish_room']},
                 wish_adress = self.cleaned_data['wish_adress'],     #   {self.cleaned_data['wish_adress']},
                 wish_square = self.cleaned_data['wish_square'],     #   {self.cleaned_data['wish_square']},
-                budget = self.cleaned_data['budget'],              #   {self.cleaned_data['budget']},
+                budget = self.cleaned_data['budget'],               #   {self.cleaned_data['budget']},
                 status = 'активен'                                  #   'активен'
             )                                                       #    );
             return new_buyer
         elif self.text == 'существует неактивен':
-            self.buyer.status = 'активен'
-            self.buyer.wish_room = self.cleaned_data['wish_room']
+            self.buyer.status = 'активен'                              #UPDATE Buyer SET wish_room = {self.cleaned_data['wish_room']}, wish_adress = {self.cleaned_data['wish_adress']}, wish_square = {self.cleaned_data['wish_square']}, budget = {self.cleaned_data['budget']}
+            self.buyer.wish_room = self.cleaned_data['wish_room']      #WHERE id_kl={kl}
             self.buyer.wish_adress = self.cleaned_data['wish_adress']
             self.buyer.wish_square = self.cleaned_data['wish_square']
             self.buyer.budget = self.cleaned_data['budget']
@@ -459,11 +447,11 @@ class FlatForm(forms.Form):
         return new_square_f
 
     def save(self) :    #сохраняю квартиру бд
+        id_sel_kl = Klient.objects.get(pasp_seria=self.cleaned_data['pasp_seria'], pasp_nomer=self.cleaned_data['pasp_nomer'])#SELECT * FROM Klient WHERE pasp_seria={self.cleaned_data['pasp_seria']}, pasp_nomer= {self.cleaned_data['pasp_nomer']}
+        sel = Seller.objects.get(id_kl=id_sel_kl)#SELECT * FROM Seller WHERE id_kl={id_sel_kl}
         if self.text_klient_doesnotexist == 'клиент неактивен':
-            id_sel_kl = Klient.objects.get(pasp_seria=self.cleaned_data['pasp_seria'], pasp_nomer=self.cleaned_data['pasp_nomer'])
-            sel = Seller.objects.get(id_kl=id_sel_kl)
-            sel.status = 'активен'
-            sel.save()
+            sel.status = 'активен'   #UPDATE Seller SET status = 'активен'
+            sel.save()               #WHERE id_kl={id_sel_kl}
         if self.text_flat_doesnotexist == 'продана':
             change_status_flat(self.cleaned_data['adress'], self.cleaned_data['coast'], elf.cleaned_data['descr'], self.cleaned_data['rooms'], self.cleaned_data['square_f'], sel)
         elif self.text_flat_doesnotexist == 'не существует':
@@ -529,19 +517,6 @@ class ContractForm(forms.Form):
         new_adress = self.cleaned_data['adress']
         check_adress(new_adress)
         text_exist_flat = checheck_doesnotexist_fl(new_adress)
-        # kl_sel = Klient.objects.get(pasp_seria=self.cleaned_data['s_pseria'], pasp_nomer=self.cleaned_data['s_pnomer'])
-        # kl_buyer_in_seller = Klient.objects.get(pasp_seria=self.cleaned_data['b_pseria'], pasp_nomer=self.cleaned_data['b_pnomer'])
-        # seller = Seller.objects.get(id_kl=kl_sel)
-        # flats_seller = Flat.objects.get(id_seller= seller)
-        # if flats_seller.adress != new_adress:
-        #     raise ValidationError('Эта квартира не принадлежит продавцу')
-        # try:
-        #     buyer_in_seller = seller.objects.get(id_kl=kl_buyer_in_seller)
-        #     flats_buyer = Flat.objects.get(id_seller=buyer_in_seller)
-        #     if flats_buyer.adress == new_adress:
-        #         raise ValidationError('Эта квартира уже принажлежит покупателю')
-        # except ObjectDoesNotExist:
-        #     return new_adress
         return new_adress
 
     def clean_coast(self):
@@ -554,59 +529,49 @@ class ContractForm(forms.Form):
         if len(str(new_proc_for_comp)) > 2:
             raise ValidationError('Вы ввели слишком большой процент')
         if str(new_proc_for_comp)[0] == '-':
-            raise ValidationError('Процент не может быть отрицательной')
+            raise ValidationError('Процент не может быть отрицательным') 
         for i in str(new_proc_for_comp):
             if not(i in set_number):
                 raise ValidationError('В поле с процентом недопустимые символы')
         return new_proc_for_comp
 
     def save(self):#сохраняю договор в бд
-        print(self.cleaned_data)
-        self.id_kl_b = Klient.objects.get(pasp_seria = self.cleaned_data['b_pseria'], pasp_nomer = self.cleaned_data['b_pnomer'])#SELECT id_kl FROM Klient WHERE pasp_seria = {self.cleaned_data['b_pseria']} AND pasp_nomer = {self.cleaned_data['b_pnomer']}
-        self.id_kl_sel = Klient.objects.get(pasp_seria = self.cleaned_data['s_pseria'], pasp_nomer = self.cleaned_data['s_pnomer'])#SELECT id_kl FROM Klient WHERE pasp_seria = {self.cleaned_data['S_pseria']} AND pasp_nomer = {self.cleaned_data['s_pnomer']}
-        self.id_b = Buyer.objects.get(id_kl=self.id_kl_b)#SELECT id_buyer FROM Buyer WHERE id_kl = {self.id_kl_b}
-        self.id_sel = Seller.objects.get(id_kl=self.id_kl_sel)#SELECT id_seller FROM Seller WHERE id_kl = {self.id_kl_sel}
-        self.id_f = Flat.objects.get(adress=self.cleaned_data['adress'])#SELECT id_fl FROM Flat WHERE adress = {self.cleaned_data['adress']}
+        self.id_kl_b = Klient.objects.get(pasp_seria = self.cleaned_data['b_pseria'], pasp_nomer = self.cleaned_data['b_pnomer'])#SELECT * FROM Klient WHERE pasp_seria = {self.cleaned_data['b_pseria']} AND pasp_nomer = {self.cleaned_data['b_pnomer']}
+        self.id_kl_sel = Klient.objects.get(pasp_seria = self.cleaned_data['s_pseria'], pasp_nomer = self.cleaned_data['s_pnomer'])#SELECT * FROM Klient WHERE pasp_seria = {self.cleaned_data['s_pseria']} AND pasp_nomer = {self.cleaned_data['s_pnomer']}
+        self.id_b = Buyer.objects.get(id_kl=self.id_kl_b)#SELECT * FROM Buyer WHERE id_kl = {self.id_kl_b}
+        self.id_sel = Seller.objects.get(id_kl=self.id_kl_sel)#SELECT * FROM Seller WHERE id_kl = {self.id_kl_sel}
+        self.id_f = Flat.objects.get(adress=self.cleaned_data['adress'])#SELECT * FROM Flat WHERE adress = {self.cleaned_data['adress']}
 
 
-        new_contract = Contract.objects.create(                  #INSERT INTO Buyer (id_buyer, id_seller, id_fl, time_to_sale, coast, proc_for_comp) VALUES (
+        new_contract = Contract.objects.create(                  #INSERT INTO Contract (id_buyer, id_seller, id_fl, time_to_sale, coast, proc_for_comp) VALUES (
             id_buyer = self.id_b,                                #    {self.id_b},
             id_seller = self.id_sel,                             #    {self.id_sel},
             id_fl = self.id_f,                                   #    {self.id_f},
             time_to_sale = self.cleaned_data['time_to_sale'],    #    {self.cleaned_data['time_to_sale']},
             coast = self.cleaned_data['coast'],                  #    {self.cleaned_data['coast']},
-            proc_for_comp = self.cleaned_data['proc_for_comp']  #    {self.cleaned_data['proc_for_comp'}
+            proc_for_comp = self.cleaned_data['proc_for_comp']   #    {self.cleaned_data['proc_for_comp'}
         )                                                        #    );
-        seller = Seller.objects.get(id_kl= self.id_kl_sel)
-        am_flat = Flat.objects.filter(id_seller=seller).count()
+        am_flat = Flat.objects.filter(id_seller=seller).count() #SELECT COUNT(id_fl) FROM Flat WHERE id_seller = {seller}
         if am_flat == 1:
-            seller.status = 'неактивен'
-            seller.save()
+            self.id_sel.status = 'неактивен'    #UPDATE Seller SET status = 'неактивен'
+            self.id_sel.save()                  #WHERE id_kl = {self.id_kl_sel}
 
-        buyer = Buyer.objects.get(id_kl= self.id_kl_b)
-        buyer.status = 'неактивен'
-        buyer.save()
-        self.id_f.status = 'продана'
-        self.id_f.save()
+        self.id_b.status = 'неактивен'          #UPDATE Buyer SET status = 'неактивен'
+        self.id_b.save()                        #WHERE id_kl = {self.id_kl_b}
+
+        self.id_f.status = 'продана'            #UPDATE Flat SET status = 'продана'
+        self.id_f.save()                        #WHERE adress = {self.cleaned_data['adress']}
         return new_contract
 
     def create_contr(self):
         doc = DocxTemplate('main/doc_contract/contract_templeate.docx')
-    
-        contr_list = Contract.objects.all()#SELECT * FROM Contract
-    
-        # for contr in contr_list:
-        #     if contr.id_buyer == self.id_b and contr.id_seller == self.id_sel and contr.id_fl == self.id_f:
-        #         id_c = contr.id_contract
-        #         print(id_c)
-        #         print(str(id_c))
 
-        id_c = Contract.objects.get(id_buyer=self.id_b, id_seller=self.id_sel, id_fl=self.id_f).id_contract
+        id_c = Contract.objects.get(id_buyer=self.id_b, id_seller=self.id_sel, id_fl=self.id_f).id_contract#SELECT id_contract FROM Contract WHERE id_buyer={self.id_b} AND id_seller={self.id_sel} AND id_fl={self.id_f}
 
-        date = Contract.objects.get(id_contract=id_c).time_create
+        date = Contract.objects.get(id_contract=id_c).time_create#SELECT time_create FROM Contract WHERE id_contract={id_c}
     
-        buyer = Klient.objects.get(pasp_seria = self.cleaned_data['b_pseria'], pasp_nomer = self.cleaned_data['b_pnomer'])#SELECT fio FROM Klient WHERE pasp_seria = {self.cleaned_data['b_pseria']} AND pasp_nomer = {self.cleaned_data['b_pnomer']}
-        seller = Klient.objects.get(pasp_seria = self.cleaned_data['s_pseria'], pasp_nomer = self.cleaned_data['s_pnomer'])#SELECT fio FROM Klient WHERE pasp_seria = {self.cleaned_data['S_pseria']} AND pasp_nomer = {self.cleaned_data['s_pnomer']}
+        buyer = Klient.objects.get(pasp_seria = self.cleaned_data['b_pseria'], pasp_nomer = self.cleaned_data['b_pnomer'])#SELECT * FROM Klient WHERE pasp_seria = {self.cleaned_data['b_pseria']} AND pasp_nomer = {self.cleaned_data['b_pnomer']}
+        seller = Klient.objects.get(pasp_seria = self.cleaned_data['s_pseria'], pasp_nomer = self.cleaned_data['s_pnomer'])#SELECT * FROM Klient WHERE pasp_seria = {self.cleaned_data['s_pseria']} AND pasp_nomer = {self.cleaned_data['s_pnomer']}
     
         buyer_fio = buyer.fio
         seller_fio = seller.fio
