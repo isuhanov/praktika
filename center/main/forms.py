@@ -35,16 +35,16 @@ def check_phone(phone):
 
 def check_mail(mail):
     if len(mail) > 100:
-        raise ValidationError('В адресе почтовог адреса слишком много сомволов')
+        raise ValidationError('В адресе почтового адреса слишком много сомволов')
 
 def check_pseria(pasp_seria):
     for i in pasp_seria:
         if not(i in set_number):
             raise ValidationError('Серия паспорта содержит недопустимые символы')
     if len(pasp_seria) > 4:
-        raise ValidationError('В серия паспорта слишком много символов')
+        raise ValidationError('В серии паспорта слишком много символов')
     if len(pasp_seria) < 4:
-        raise ValidationError('В серия паспорта недостаточно символов')
+        raise ValidationError('В серии паспорта недостаточно символов')
 
 def check_pnomer(pasp_nomer):
     for i in pasp_nomer:
@@ -57,9 +57,9 @@ def check_pnomer(pasp_nomer):
 
 def check_adress(adress):
     if len(adress) > 150:
-        raise ValidationError('В адрессе слишком много символов')
+        raise ValidationError('В адресе слишком много символов')
     if len(adress) < 5:
-        raise ValidationError('В адрессе недостаточно символов')
+        raise ValidationError('В адресе недостаточно символов')
 
 def check_coast(coast):
     coast = str(coast)
@@ -67,7 +67,7 @@ def check_coast(coast):
         raise ValidationError('Цена не может быть отрицательной')
     for i in coast:
         if not(i in set_number):
-            raise ValidationError('Некоректные символы в цене')
+            raise ValidationError('Некорректные символы в цене')
     if len(coast) > 20:
         raise ValidationError('Слишком большая цена')
     if float(coast) == 0:
@@ -79,7 +79,7 @@ def check_rooms(rooms):
         raise ValidationError('Кол-во комнат не может быть отрицательным')
     for i in rooms:
         if not(i in set_number):
-            raise ValidationError('Некоректные символы в кол-ве комнат')
+            raise ValidationError('Некорректные символы в кол-ве комнат')
     if len(rooms) > 10:
         raise ValidationError('Слишком большое кол-во комнат')
 
@@ -89,7 +89,7 @@ def chech_square(square):
         raise ValidationError('Площадь не может быть отрицательной')
     for i in square:
         if not(i in set_number):
-            raise ValidationError('Некоректные символы в площади')
+            raise ValidationError('Некорректные символы в площади')
     if len(square) > 5:
         raise ValidationError('Слишком большая площадь')
 
