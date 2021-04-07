@@ -551,7 +551,7 @@ class ContractForm(forms.Form):
             coast = self.cleaned_data['coast'],                  #    {self.cleaned_data['coast']},
             proc_for_comp = self.cleaned_data['proc_for_comp']   #    {self.cleaned_data['proc_for_comp'}
         )                                                        #    );
-        am_flat = Flat.objects.filter(id_seller=seller).count() #SELECT COUNT(id_fl) FROM Flat WHERE id_seller = {seller}
+        am_flat = Flat.objects.filter(id_seller= self.id_sel).count() #SELECT COUNT(id_fl) FROM Flat WHERE id_seller = {seller}
         if am_flat == 1:
             self.id_sel.status = 'неактивен'    #UPDATE Seller SET status = 'неактивен'
             self.id_sel.save()                  #WHERE id_kl = {self.id_kl_sel}
