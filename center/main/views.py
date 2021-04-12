@@ -4,11 +4,13 @@ from django.views import View
 from .models import *
 from .forms import *
 
+#функция для вывода главной страницы
 def index(request):
     return render(request, 'main/index.html')
 
 
 class SellerView(View):
+    #функция для вывода продавцов
     def get(self,request):
         seller = Seller.objects.values('id_kl')# SELECT id_kl FROM Seller
         klient = Klient.objects.all()#SELECT * FROM Klient
@@ -18,6 +20,7 @@ class SellerView(View):
 
 
 class BuyerView(View):
+    #функция для вывода покупателей
     def get(self,request):
         buyer = Buyer.objects.values('id_kl')# SELECT id_kl FROM Buyer
         klient = Klient.objects.all()#SELECT * FROM Klient
@@ -27,6 +30,7 @@ class BuyerView(View):
 
 
 class ContractView(View):
+    #функция для вывода договоров
     def get(self,request):
         # id_b = Contract.objects.get(id_contract=1).id_buyer
         contract =Contract.objects.all()#SELECT * FROM Contract
@@ -37,15 +41,18 @@ class ContractView(View):
 
 
 class FlatView(View):
+    #функция для вывода квартир
     def get(sefl, request):
         flat = Flat.objects.all()#SELECT * FROM Flat
         return render(request, 'main/flat_view.html', context={'flat': flat})
 
 class CreateSeller(View):
+    #функция для вывода формы продавца
     def get(self,request):
         seller = SellerForm()
         return render(request, 'main/seller_create.html' ,context={'seller': seller})
 
+    #функция для обработки пост запроса для формы прдавца
     def post(self, request):
         bound_form = SellerForm(request.POST)
 
@@ -59,10 +66,12 @@ class CreateSeller(View):
         return render(request, 'main/seller_create.html' ,context={'seller': bound_form})
 
 class CreateBuyer(View):
+    #функция для вывода формы покупателя
     def get(self, request):
         buyer = BuyerForm()
         return render(request, 'main/buyer_create.html', context={'buyer': buyer})
 
+    #функция для обработки пост запроса для формы покупателя
     def post(self, request):
         bound_form = BuyerForm(request.POST)
 
@@ -75,10 +84,12 @@ class CreateBuyer(View):
         return render(request, 'main/buyer_create.html' ,context={'buyer': bound_form}) 
 
 class AddFlat(View):
+    #функция для вывода формы квартиры 
     def get(self,request):
         flat = FlatForm()
         return render(request, 'main/flat_add.html', context={'flat': flat})
 
+    #функция для обработки пост запроса для формы квартиры
     def post(self,request):
         bound_form = FlatForm(request.POST)
 
@@ -91,11 +102,12 @@ class AddFlat(View):
 
 
 class CreateContract(View):
+    #функция для вывода формы договора
     def get(self,request):
         contract = ContractForm()
         return render(request, 'main/contract_create.html', context={'contract': contract})
 
-
+    #функция для обработки пост запроса для формы договора
     def post(self, request):
         bound_form = ContractForm(request.POST)
 

@@ -4,10 +4,12 @@ from main.models import *
 
 register = template.Library()
 
+#функция для получения данных словаря
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
 
+#функция для получения статуса
 @register.filter
 def get_status(sel_list, id_k):
     print(sel_list)
@@ -18,6 +20,7 @@ def get_status(sel_list, id_k):
     return seller_status
 
 
+#функция для получения паспортных данных
 def get_p_data(id_obj_field, obj_id, p_data):
     main_list = Contract.objects.values('id_contract', id_obj_field)
     for obj in main_list:                    #узнаю id неоходимого клиента
@@ -40,27 +43,31 @@ def get_p_data(id_obj_field, obj_id, p_data):
                     p_data_kl = Klient.objects.get(id_kl=kl.id_kl).pasp_seria
     return p_data_kl
 
-
+#функция для получения серии паспорта покупателя
 @register.filter
 def get_buyer_pseria(model_info, obj_id):
     p_seria_b = get_p_data('id_buyer', obj_id, 'серия')
     return p_seria_b
 
+#функция ля получения номера паспорта покупателя
 @register.filter
 def get_buyer_pnomer(model_info, obj_id):
     p_nomer_b = get_p_data('id_buyer', obj_id, 'номер')
     return p_nomer_b
 
+#функция для получения серии паспорта продавца
 @register.filter
 def get_seller_pseria(model_info, obj_id):
     p_seria_s = get_p_data('id_seller', obj_id, 'серия')
     return p_seria_s
 
+#функция для получения номера паспорта продавца
 @register.filter
 def get_seller_pnomer(model_info, obj_id):
     p_nomer_s = get_p_data('id_seller', obj_id, 'номер')
     return p_nomer_s
 
+#функция для получения адреса квартиры
 @register.filter
 def get_adress(flat, obj_id):
     contr_list = Contract.objects.values('id_contract', 'id_fl')
@@ -71,7 +78,7 @@ def get_adress(flat, obj_id):
     adress = Flat.objects.get(id_fl=id_f).adress
     return adress
 
-
+#функция для получения серии паспорта продавца
 @register.filter
 def get_pseria_sel(klient, obj_id):
     flat_list = Flat.objects.values('id_fl', 'id_seller')
@@ -89,6 +96,7 @@ def get_pseria_sel(klient, obj_id):
     print(p_seria_s)
     return p_seria_s
 
+#функция для получения номера паспорта продавца
 @register.filter
 def get_pnomer_sel(flat, obj_id):
     flat_list = Flat.objects.values('id_fl', 'id_seller')

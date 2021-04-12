@@ -18,6 +18,7 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 
+#задаю глобальные пути(ссылки)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main.urls')),

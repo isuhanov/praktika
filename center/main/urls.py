@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import *
 
+#задаю локальный пути(ссулки)
 urlpatterns = [
     path('', index, name='index_url'),
     path('seller/', CreateSeller.as_view(), name='create_seller_url'),

@@ -9,9 +9,10 @@ set_number = {'1','2','3','4','5','6','7','8','9','0'}
 set_letters_cir = {' ', 'а','б','в','г','д','е','ё','ж','з','и','й','к','л','м','н','о','п','р','с','т','у','ф','х','ц','ч','ш','щ','ъ','ы','ь','э','ю','я' }
 set_letters_lat = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'}
 
-class DateInput(forms.DateInput):
+class DateInput(forms.DateInput):#объявляю поле ввода даты
     input_type = 'date'
 
+#функция проверки фио
 def check_fio(fio):
     fio.lower
     for i in fio.lower():
@@ -20,10 +21,12 @@ def check_fio(fio):
     if len(fio) > 100:
         raise ValidationError('Кол-во символов превышает предел')
 
+#функция проверки даты рождаения
 def check_bd(bd):
     if bd > datetime.date.today():
         raise ValidationError('Дата рождения не должна превышать настоящую')
 
+#функция проверки номера телефона
 def check_phone(phone):
     for i in phone:
         if not(i in set_number):
@@ -33,10 +36,12 @@ def check_phone(phone):
     if len(phone) < 11:
         raise ValidationError('В номере недостаточно символов')
 
+#функция проверки почты
 def check_mail(mail):
     if len(mail) > 100:
         raise ValidationError('В адресе почтового адреса слишком много сомволов')
 
+#функция проверки серии паспорта
 def check_pseria(pasp_seria):
     for i in pasp_seria:
         if not(i in set_number):
@@ -46,6 +51,7 @@ def check_pseria(pasp_seria):
     if len(pasp_seria) < 4:
         raise ValidationError('В серии паспорта недостаточно символов')
 
+#функция проверки номера паспорта
 def check_pnomer(pasp_nomer):
     for i in pasp_nomer:
         if not(i in set_number):
@@ -55,12 +61,14 @@ def check_pnomer(pasp_nomer):
     if len(pasp_nomer) < 6:
         raise ValidationError('В номере паспорта недостаточно символов')
 
+#функция проверки адреса
 def check_adress(adress):
     if len(adress) > 150:
         raise ValidationError('В адресе слишком много символов')
     if len(adress) < 5:
         raise ValidationError('В адресе недостаточно символов')
 
+#функция проверки цены 
 def check_coast(coast):
     coast = str(coast)
     if coast[0] == '-':
@@ -73,6 +81,7 @@ def check_coast(coast):
     if float(coast) == 0:
         raise ValidationError('Не может быть равным 0')
 
+#функция проверки комнат 
 def check_rooms(rooms):
     rooms = str(rooms)
     if rooms[0] == '-':
@@ -83,6 +92,7 @@ def check_rooms(rooms):
     if len(rooms) > 10:
         raise ValidationError('Слишком большое кол-во комнат')
 
+#функция проверки площади
 def chech_square(square):
     square = str(square)
     if square[0] == '-':
@@ -94,6 +104,7 @@ def chech_square(square):
         raise ValidationError('Слишком большая площадь')
 
 
+#функция проверки существования клиента 
 def check_exist_kl(pseria, pnomer, model):
     try:
         kl = Klient.objects.get(pasp_seria=pseria, pasp_nomer=pnomer)#SELECT * FORM Klient WHERE pasp_seria={pseria}, pasp_nomer={pnomer}
@@ -103,6 +114,7 @@ def check_exist_kl(pseria, pnomer, model):
     except ObjectDoesNotExist:
         return 'клиент не существует'
 
+#функция проверки несуществования клиента
 def check_doesnotexist_kl(pseria, pnomer, model):
     try:
         kl = Klient.objects.get(pasp_seria=pseria, pasp_nomer=pnomer)#SELECT * FORM Klient WHERE pasp_seria={pseria}, pasp_nomer={pnomer}
@@ -115,6 +127,7 @@ def check_doesnotexist_kl(pseria, pnomer, model):
         raise ValidationError('Такой клиент не существует')
         return 'клиент не существует'
 
+#функция проверки существования квартиры
 def check_exist_fl(new_adress):
     try:
         fl = Flat.objects.get(adress=new_adress)#SELECT * FORM Flat WHERE adress = {new_adress}
@@ -126,6 +139,7 @@ def check_exist_fl(new_adress):
     except ObjectDoesNotExist:
         return 'не существует'
 
+#функция проверки несуществования квартиры
 def checheck_doesnotexist_fl(new_adress):
     try:
         fl = Flat.objects.get(adress=new_adress)#SELECT * FORM Flat WHERE adress = {new_adress}
@@ -140,6 +154,7 @@ def checheck_doesnotexist_fl(new_adress):
 
 
 
+#функция создания клиента
 def create_kl(text, n_fio,n_bd, n_phone, n_mail, n_pseria, n_pnomer):
     if text == 'клиент не существует':
         new_kl = Klient.objects.create( #INSERT INTO Klient (fio, bd, phone, mail, pasp_seria, pasp_nomer) VALUES (
@@ -152,6 +167,7 @@ def create_kl(text, n_fio,n_bd, n_phone, n_mail, n_pseria, n_pnomer):
         )                               #    );
         return new_kl
 
+#функция создания квартиры
 def create_flat(n_coast, n_descr, n_rooms, n_adress, n_squae, n_id_seller):
     new_flat = Flat.objects.create(                        #INSERT INTO Seller (coast, descr, rooms, adress, square_f, id_seller, status) VALUES (
         coast = n_coast,                                   #    {self.cleaned_data['coast']},
@@ -164,6 +180,7 @@ def create_flat(n_coast, n_descr, n_rooms, n_adress, n_squae, n_id_seller):
     )                                                      #    );
     return new_flat
 
+#функция смены статуса квартиры
 def change_status_flat(new_adress, n_coast, n_descr, n_rooms, n_squae, n_id_seller):
     fl = Flat.objects.get(adress = new_adress)          #UPDATE Flat SET coast = n_coast, descr = n_descr, rooms = n_rooms, square_f = n_squae, id_seller = (SELECT * FORM Seller WHERE id_kl = {n_id_seller}), status = 'активен'
     fl.coast = n_coast                                  #WHERE adress = {new_adress}
@@ -177,6 +194,7 @@ def change_status_flat(new_adress, n_coast, n_descr, n_rooms, n_squae, n_id_sell
 
 
 
+#форма добавления продавца
 class SellerForm(forms.Form):
     fio = forms.CharField(max_length=100)
     bd = forms.DateField(widget=DateInput)
@@ -204,54 +222,63 @@ class SellerForm(forms.Form):
     adress.widget.attrs.update({'class': 'from_input'})
     square_f.widget.attrs.update({'class': 'from_input'})
 
-
+    #клин-метод проверки поля фио
     def clean_fio(self):
         new_fio = self.cleaned_data['fio']
         check_fio(new_fio)
         return new_fio
 
+    #клин-метод проверки поля дня рождения
     def clean_bd(self):
         new_bd = self.cleaned_data['bd']
         check_bd(new_bd)
         return new_bd
 
+    #клин-метод проверки поля телефона
     def clean_phone(self):
         new_phone = self.cleaned_data['phone']
         check_phone(new_phone)
         return new_phone
 
+    #клин-метод проверки поля почты
     def clean_mail(self):
         new_mail = self.cleaned_data['mail']
         check_mail(new_mail)
         return new_mail
 
+    #клин-метод проверки поля серии паспорта
     def clean_pasp_seria(self):
         new_pseria = self.cleaned_data['pasp_seria']
         check_pseria(new_pseria)
         return new_pseria
 
+    #клин-метод проверки поля номера паспорта
     def clean_pasp_nomer(self):
         new_pnomer = self.cleaned_data['pasp_nomer']
         check_pnomer(new_pnomer)
         self.exist_klient_text = check_exist_kl(self.cleaned_data['pasp_seria'], new_pnomer, Seller)#проверка на существование клиента
         return new_pnomer
 
+    #клин-метод проверки поля цены
     def clean_coast(self):
         new_coast = self.cleaned_data['coast']
         check_coast(new_coast)
         return new_coast
 
+    #клин-метод проверки поля комнат
     def clean_rooms(self):
         new_rooms = self.cleaned_data['rooms']
         check_rooms(new_rooms)
         return new_rooms
 
+    #клин-метод проверки поля адреса
     def clean_adress(self):
         new_adress = self.cleaned_data['adress']
         check_adress(new_adress)
         self.text_flat_exist = check_exist_fl(new_adress)
         return new_adress
 
+    #клин-метод проверки поля площади
     def clean_square_f(self):
         new_square_f = self.cleaned_data['square_f']
         chech_square(new_square_f)
@@ -278,6 +305,7 @@ class SellerForm(forms.Form):
 
 
 
+#форма добавления покупателя
 class BuyerForm(forms.Form):
     fio = forms.CharField(max_length=100)
     bd = forms.DateField(widget=DateInput)
@@ -303,31 +331,37 @@ class BuyerForm(forms.Form):
     wish_square.widget.attrs.update({'class': 'from_input'})
     budget.widget.attrs.update({'class': 'from_input'})
 
+    #клин-метод проверки поля фио
     def clean_fio(self):
         new_fio = self.cleaned_data['fio']
         check_fio(new_fio)
         return new_fio
 
+    #клин-метод проверки поля дня рождения
     def clean_bd(self):
         new_bd = self.cleaned_data['bd']
         check_bd(new_bd)
         return new_bd
 
+    #клин-метод проверки поля телефона
     def clean_phone(self):
         new_phone = self.cleaned_data['phone']
         check_phone(new_phone)
         return new_phone
 
+    #клин-метод проверки поля почты
     def clean_mail(self):
         new_mail = self.cleaned_data['mail']
         check_mail(new_mail)
         return new_mail
 
+    #клин-метод проверки поля серии паспорта
     def clean_pasp_seria(self):
         new_pseria = self.cleaned_data['pasp_seria']
         check_pseria(new_pseria)
         return new_pseria
 
+    #клин-метод проверки поля номера паспорта
     def clean_pasp_nomer(self):
         new_pnomer = self.cleaned_data['pasp_nomer']
         check_pnomer(new_pnomer)
@@ -347,21 +381,25 @@ class BuyerForm(forms.Form):
             self.text = 'клиент не существует'
         return new_pnomer       
 
+    #клин-метод проверки поля комнта
     def clean_wish_room(self):
         new_wish_room = self.cleaned_data['wish_room']
         check_rooms(new_wish_room)
         return new_wish_room
 
+    #клин-метод проверки поля адреса
     def clean_wish_adress(self):
         new_wish_adress = self.cleaned_data['wish_adress']
         check_adress(new_wish_adress)
         return new_wish_adress
 
+    #клин-метод проверки поля площади
     def clean_wish_square(self):
         new_wish_square = self.cleaned_data['wish_square']
         chech_square(new_wish_square)
         return new_wish_square
 
+    #клин-метод проверки поля бюджета
     def clean_budget(self):
         new_budget = self.cleaned_data['budget']
         check_coast(new_budget)
@@ -395,6 +433,7 @@ class BuyerForm(forms.Form):
         
 
 
+#форма добавления квартиры клеиенту
 class FlatForm(forms.Form):
     pasp_seria = forms.CharField(max_length=4)
     pasp_nomer = forms.CharField(max_length=6)
@@ -414,33 +453,39 @@ class FlatForm(forms.Form):
     adress.widget.attrs.update({'class': 'from_input'})
     square_f.widget.attrs.update({'class': 'from_input'})
 
+    #клин-метод проверки поля серии пспорта
     def clean_pasp_seria(self):
         new_pasp_seria = self.cleaned_data['pasp_seria']
         check_pseria(new_pasp_seria)
         return new_pasp_seria
 
+    #клин-метод проверки поля номера паспорта
     def clean_pasp_nomer(self):
         new_pasp_nomer = self.cleaned_data['pasp_nomer']
         check_pnomer(new_pasp_nomer)
         self.text_klient_doesnotexist = check_doesnotexist_kl(self.cleaned_data['pasp_seria'], new_pasp_nomer, Seller)
         return new_pasp_nomer
 
+    #клин-метод проверки поля цены
     def clean_coast(self):
         new_coast = self.cleaned_data['coast']
         check_coast(new_coast)
         return new_coast
 
+    #клин-метод проверки поля комнат
     def clean_rooms(self):
         new_rooms = self.cleaned_data['rooms']
         check_rooms(new_rooms)
         return new_rooms
 
+    #клин-метод проверки поля адреса
     def clean_adress(self):
         new_adress = self.cleaned_data['adress']
         check_adress(new_adress)
         self.text_flat_doesnotexist = check_exist_fl(new_adress)
         return new_adress
 
+    #клин-метод проверки поля площади
     def clean_square_f(self):
         new_square_f = self.cleaned_data['square_f']
         chech_square(new_square_f)
@@ -459,6 +504,7 @@ class FlatForm(forms.Form):
 
 
 
+#форма составления договора
 class ContractForm(forms.Form):
     b_pseria = forms.CharField(max_length=4)
     b_pnomer = forms.CharField(max_length=6)
@@ -478,12 +524,14 @@ class ContractForm(forms.Form):
     coast.widget.attrs.update({'class': 'from_input'})
     proc_for_comp.widget.attrs.update({'class': 'from_input'})
 
-    def clean_b_pseria(self):#проверка серии паспорта
+    #клин-метод проверки поля серии паспорта покупателя
+    def clean_b_pseria(self):
         new_pseria_b = self.cleaned_data['b_pseria']
         check_pseria(new_pseria_b)
         return new_pseria_b
 
-    def clean_b_pnomer(self):#проверка номера паспорта
+    #клин-метод проверки поля номера паспорта покупателя
+    def clean_b_pnomer(self):
         print(self.cleaned_data)
         new_pnomer_b = self.cleaned_data['b_pnomer']
         check_pnomer(new_pnomer_b)
@@ -492,11 +540,13 @@ class ContractForm(forms.Form):
             raise ValidationError('Клиент имеет статус неактивен')
         return new_pnomer_b
 
+    #клин-метод проверки поля серии паспорта продавца
     def clean_s_pseria(self):
         new_pseria_s = self.cleaned_data['s_pseria']
         check_pseria(new_pseria_s)
         return new_pseria_s
 
+    #клин-метод проверки поля номера паспорта продавца 
     def clean_s_pnomer(self):
         new_pnomer_s = self.cleaned_data['s_pnomer']
         check_pnomer(new_pnomer_s)
@@ -507,23 +557,27 @@ class ContractForm(forms.Form):
             raise ValidationError('Клиент имеет статус неактивен')
         return new_pnomer_s
 
+    #клин-метод проверки поля срока сдачи
     def clean_time_to_sale(self):
         new_time = self.cleaned_data['time_to_sale']
         if new_time < datetime.date.today():
             raise ValidationError('Срок сдачи не может быть меньше сегодняшнего числа')
         return new_time
 
+    #клин-метод проверки поля адреса
     def clean_adress(self):
         new_adress = self.cleaned_data['adress']
         check_adress(new_adress)
         text_exist_flat = checheck_doesnotexist_fl(new_adress)
         return new_adress
 
+    #клин-метод проверки поля цены
     def clean_coast(self):
         new_coast = self.cleaned_data['coast']
         check_coast(new_coast)
         return new_coast
 
+    #клин-метод проверки поля процента компании
     def clean_proc_for_comp(self):
         new_proc_for_comp = self.cleaned_data['proc_for_comp']
         if len(str(new_proc_for_comp)) > 2:
@@ -563,7 +617,7 @@ class ContractForm(forms.Form):
         self.id_f.save()                        #WHERE adress = {self.cleaned_data['adress']}
         return new_contract
 
-    def create_contr(self):
+    def create_contr(self):#формирую выходной документ
         doc = DocxTemplate('main/doc_contract/contract_templeate.docx')
 
         id_c = Contract.objects.get(id_buyer=self.id_b, id_seller=self.id_sel, id_fl=self.id_f).id_contract#SELECT id_contract FROM Contract WHERE id_buyer={self.id_b} AND id_seller={self.id_sel} AND id_fl={self.id_f}
